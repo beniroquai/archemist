@@ -125,3 +125,33 @@ git clone https://github.com/cooper-group-uol-robotics/kern_pcb_balance.git
 
 
 Note that, other robot/station handlers that don't use ROS1 can be also added and utilised in the ARChemist application as long as they allow the execution of their respective station/robot operations and retrieving their data.
+
+
+
+# MAC MongoDB 
+
+try to delete folder "dbPath", to delete that, look at your config to get the path like this:
+
+```bash
+systemLog:
+  destination: file
+  path: /opt/homebrew/var/log/mongodb/mongo.log
+  logAppend: true
+storage:
+  dbPath: /opt/homebrew/var/mongodb
+net:
+  bindIp: 127.0.0.1, ::1
+  ipv6: true
+in my Case is /opt/homebrew/var/mongodb
+
+now you need to folow this commands:
+
+$cd /opt/homebrew/var
+
+$rm mongodb
+
+$mkdir mongodb
+then:
+
+brew services restart mongodb-community
+``````

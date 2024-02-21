@@ -2,23 +2,24 @@ import rospy
 from typing import Tuple, List, Optional
 from archemist.core.processing.handler import StationOpHandler, SimStationOpHandler
 from .state import (
-    APCWeighingStation, 
-    APCOpenBalanceDoorOp, 
-    APCCloseBalanceDoorOp,
-    APCTareOp,
-    APCWeighingOp,
-    APCWeighResult
-)
+    MicroscopeStation,
+    MicroscopeInLoadingPositionOp,
+                    MicroscopeInLoadingPositionResult,
+                    MicroscopeImagingOp,
+                    MicroscopeImagingResult,
+                    MicroscopeCalibrationOp,
+                    MicroscopeCalibrationResult
+                    )
 from archemist.core.util.enums import OpOutcome
 
 class SimImSwitchMicroscopeStationHandler(SimStationOpHandler):
-    def __init__(self, station: APCWeighingStation):
+    def __init__(self, station: MicroscopeStation):
         super().__init__(station)
 
-    def get_op_result(self) -> Tuple[OpOutcome, Optional[List[APCWeighResult]]]:
+    def get_op_result(self) -> Tuple[OpOutcome, Optional[List[MicroscopeImagingResult]]]:
         current_op = self._station.assigned_op
-        if isinstance(current_op, APCWeighingOp):  
-            result = APCWeighResult.from_args(
+        if isinstance(current_op, MicroscopeImagingOp):  
+            result = MicroscopeImagingResult.from_args(
                 origin_op=current_op.object_id,
                 reading_value=42
             )
@@ -29,17 +30,16 @@ class SimImSwitchMicroscopeStationHandler(SimStationOpHandler):
 
 try:  
     import rospy
-    from roslabware_msgs.msg import KernPCB2500Cmd, KernPCB2500Reading
-    from roslabware_msgs.msg import KernDoorCmd, KernDoorStatus 
-    from roslabware_msgs.msg import sashDoorCmd, sashDoorStatus
 
-    class APCWeighingStationHandler(StationOpHandler):
-        def __init__(self, station:APCWeighingStation):
+    class ImSwitchMicroscopeStationHandler(StationOpHandler):
+        def __init__(self, station:MicroscopeImagingOp):
             super().__init__(station)
 
         def initialise(self) -> bool:
+            #TODO: Connect to Imswitch REST API '''
             rospy.init_node(f'{self._station}_handler')
-            self._pub_balance = rospy.Publisher("kern_PCB2500_Commands", KernPCB2500Cmd, queue_size=2)
+            
+            self._pub_microscope = rospy.Publisher("ImSwitchMicroscope_Commands", KernPCB2500Cmd, queue_size=2)
             self._pub_door = rospy.Publisher("kern_door_Commands", KernDoorCmd, queue_size=2)
             self._pub_sash = rospy.Publisher("sash_door_Commands", sashDoorCmd, queue_size=2)
             rospy.Subscriber("kern_PCB2500_Readings", KernPCB2500Reading, self.weight_callback)
@@ -50,30 +50,17 @@ try:
             self._received_mass = False
             self._op_results = {}
             rospy.sleep(2)
+            '''
             return True
 
         def execute_op(self):
             current_op = self._station.assigned_op
             self._command_executed = False
-            if isinstance(current_op, APCWeighingOp):
+            if isinstance(current_op, MicroscopeInLoadingPositionOp):
                 self.read_weight = None
-                rospy.loginfo('Reading stable weight.')
-                for i in range(10):
-                    self._pub_balance.publish(kern_command=KernPCB2500Cmd.GET_MASS_STABLE)
-            elif isinstance(current_op, APCTareOp):
-                rospy.loginfo('Taring balance.')
-                for i in range(10):
-                    self._pub_balance.publish(kern_command=KernPCB2500Cmd.TARE_BALANCE)
-            elif isinstance(current_op, APCOpenBalanceDoorOp):
-                rospy.loginfo('Opening balance door.')
-                self._target_balance_door_status = "door_open"
-                for i in range(10):
-                    self._pub_door.publish(kern_door_command=KernDoorCmd.OPEN_DOOR)
-            elif isinstance(current_op, APCCloseBalanceDoorOp):
-                rospy.loginfo('Closing balance door.')
-                self._target_balance_door_status = "door_closed"
-                for i in range(10):
-                    self._pub_door.publish(kern_door_command=KernDoorCmd.CLOSE_DOOR)
+                rospy.loginfo('Moving microscope to loading pos.')
+                #for i in range(10):
+                #    self._pub_balance.publish(kern_command=KernPCB2500Cmd.GET_MASS_STABLE)
             else:
                 rospy.logwarn(f'[{self.__class__.__name__}] Unkown operation was received')
 

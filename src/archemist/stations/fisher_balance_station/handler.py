@@ -5,7 +5,7 @@ from .state import FisherWeightingStation, FisherWeighOp, FisherWeighResult
 from archemist.core.processing.handler import StationOpHandler,  SimStationOpHandler
 from archemist.core.util.enums import OpOutcome
 import random
-
+# Model to Physical World
 class SimFisherWeighingHandler(SimStationOpHandler):
     def __init__(self, station: FisherWeightingStation):
         super().__init__(station)

@@ -1,0 +1,39 @@
+{
+    // Verwendet IntelliSense zum Ermitteln möglicher Attribute.
+    // Zeigen Sie auf vorhandene Attribute, um die zugehörigen Beschreibungen anzuzeigen.
+    // Weitere Informationen finden Sie unter https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Start Server",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "./src/archemist/main_startserver.py",
+            "console": "integratedTerminal",
+            "justMyCode": false
+        },
+        {
+            "name": "Launch Stations",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "./src/archemist/main_launchstations.py",
+            "console": "integratedTerminal",
+            "justMyCode": false
+        } , 
+        {
+            "name": "Start CLI",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "./src/archemist/main_launchcli.py",
+            "console": "integratedTerminal",
+            "justMyCode": false
+        }       
+    ],
+    "compounds": [
+        {
+            "name": "Start Server and Launch Stations",
+            "configurations": ["Start Server", "Launch Stations", "Start CLI"],
+            "stopAll": true
+        }
+    ]
+}

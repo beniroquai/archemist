@@ -56,7 +56,7 @@ try:
                 elif current_op.time_unit == "hour":
                     self.total_seconds = current_op.duration,*60*60
                 msg = ShakerCommand(shake_duration=current_op.self.total_seconds, task_seq=self._task_seq)
-                for i in range(10):
+                for i in range(10): # TODO: Why 10?
                     self._shaker_plate_pu.publish(msg)
             else:
                 rospy.logwarn(f'[{self.__class__.__name__}] Unkown operation was received')

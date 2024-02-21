@@ -24,6 +24,7 @@ class ArchemistCLI:
         while True:
             try:
                 selection = prompt(main_menu)
+                if len(selection)==0: continue
                 if selection['main_menu'] == 'Start/Resume':
                     self._log_client('staring workflow')
                     msg = CMDMessage(category=CMDCategory.WORKFLOW, cmd='start')

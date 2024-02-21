@@ -9,6 +9,7 @@ from archemist.core.state.sample import Sample
 from typing import Dict, Union, Literal
 from bson.objectid import ObjectId
 
+# state classes for the archemist system 
 ''' ==== Station Description ==== '''
 class FisherWeightingStation(Station):
     def __init__(self, station_model: Union[StationModel,ModelProxy]) -> None:

@@ -5,6 +5,8 @@ from .state import LBSampleAnalyseRGBOp, LBSampleAnalyseLABOp, LBAnalyseRGBResul
 from archemist.core.util.enums import OpOutcome
 import random
 
+'''
+ define a handler that handles the interaction between the robot application representation and its real world counterpart. This is achieved by communicating with its driver using the appropriate medium so that its tasks can be executed and its state can be updated in real time. The robot handler class needs to inherit from RobotHandler found handler.py and implement the methods: 1) execute_op, 2) is_op_execution_complete, 3) get_op_result and 4) run. Note that many handlers can be defined for a single robot, in case it has multiple drivers that use different communication channels. When running the workflow, the appropriate handler needs to be specified in the workflow config file, as only a single handler per robot can run.'''
 class SimLightBoxHandler(SimStationOpHandler):
     def __init__(self, station:LightBoxStation):
         super().__init__(station)

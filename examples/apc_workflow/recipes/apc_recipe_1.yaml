@@ -47,6 +47,21 @@ general:
   name: apc_recipe
   id: 1
 steps:
+  - state_name: microscope_imaging
+    station:
+      type: AutonomousMicroscopeStation
+      id: 9
+      process:
+        type: MicroscopeImagingProcess
+        operations:
+          - name: capture_image
+            op: CaptureImageOp
+            parameters:
+              image_name: microscope_image
+        args: Null
+    transitions:
+      on_success: synthesise
+      on_fail: failed_state
   - state_name: synthesise
     station:
       type: APCMetaStation
