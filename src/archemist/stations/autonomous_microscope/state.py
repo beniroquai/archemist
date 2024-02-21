@@ -1,6 +1,7 @@
 from archemist.core.state.station import Station
 from archemist.core.state.station_op import StationOp
 from archemist.core.state.station_op_result import StationOpResult
+from archemist.core.state.station_op import StationSampleOp
 from archemist.core.persistence.models_proxy import ModelProxy
 from .model import AutonomousMicroscopeStationModel, MicroscopeImagingResultModel
 from archemist.core.state.station import Station, StationModel
@@ -17,6 +18,10 @@ class AutonomousMicroscopeStation(Station):
         cls._set_model_common_fields(model, station_dict)
         model.save()
         return cls(model)
+
+class CaptureImageOp(StationSampleOp):
+    def __init__(self, station_op_model: Union[AutonomousMicroscopeStationModel, ModelProxy]) -> None:
+        super().__init__(station_op_model)
 
 class StartImagingOp(StationOp):
     # Assuming a simple operation without additional parameters for simplicity
